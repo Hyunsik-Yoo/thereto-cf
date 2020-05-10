@@ -2,7 +2,7 @@ export class User {
     id: String;
     nickname: String;
     social: String;
-    profilURL: String;
+    profileURL: String;
     receivedCount: Number;
     sentCount: Number;
 
@@ -10,9 +10,21 @@ export class User {
         this.id = json.id;
         this.nickname = json.nickname;
         this.social = json.social;
-        this.profilURL = json.profileURL;
+        this.profileURL = json.profileURL;
         this.receivedCount = json.receivedCount;
         this.sentCount = json.sentCount;
+    }
+
+    /**
+     * name
+     */
+    public toString(): String {
+        return `id: ${this.id}\n
+        nickanme: ${this.nickname}\n
+        social: ${this.social}\n
+        profile_url: ${this.profileURL}\n
+        received_count: ${this.receivedCount}\n
+        sent_count: ${this.sentCount}`;
     }
 }
 

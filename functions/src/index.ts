@@ -24,6 +24,7 @@ exports.addMessage = functions.https.onRequest(async (req, res) => {
 exports.signUp = functions.https.onRequest(async (request, response) => {
     if (request.method === "POST") {
         let user = new User(request.body);
+        console.log(user.toString())
         let userJson = JSON.parse(JSON.stringify(user));
         let document = admin.firestore().doc(`user/${user.social}${user.id}`)
         let responseContainer = new ResponseContainer<User>(user, "");
