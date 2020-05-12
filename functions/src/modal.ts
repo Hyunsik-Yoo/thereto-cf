@@ -28,6 +28,71 @@ export class User {
     }
 }
 
+export class Letter {
+    id: String;
+    from: User;
+    to: Friend;
+    location: Location;
+    photo: String;
+    message: String;
+    createdAt: String;
+    isRead: Boolean = false;
+
+    constructor(json: any) {
+        this.id = json.id;
+        this.from = json.from;
+        this.to = json.to;
+        this.location = json.location;
+        this.photo = json.photo;
+        this.message = json.message;
+        this.createdAt = json.createdAt;
+        this.isRead = json.isRead;
+    }
+}
+
+export class Friend {
+    id: String;
+    nickname: String;
+    social: String;
+    profileURL: String;
+    requestState: State;
+    createdAt: String;
+    receivedCount: Number = 0
+    sentCount: Number = 0
+
+    constructor(json: any) {
+        this.id = json.id;
+        this.nickname = json.nickanme;
+        this.social = json.social;
+        this.profileURL = json.profileURL;
+        this.requestState = json.requestState;
+        this.createdAt = json.createdAt;
+        this.receivedCount = json.receivedCount;
+        this.sentCount = json.sentCount;
+    }
+}
+
+export class Location {
+    addr: String;
+    name: String;
+    latitude: Number;
+    longitude: Number;
+
+    constructor(json: any) {
+        this.addr = json.addr;
+        this.name = json.name;
+        this.latitude = json.latitude;
+        this.longitude = json.longitude;
+    }
+}
+
+export enum State {
+    WAIT = "wait", // 수락 대기중
+    SENT = "sent", // 친구 요청 보냄
+    FRIEND = "friend",
+    NONE = "none"
+}
+
 export class ResponseContainer<T> {
     data: T;
     error: String;

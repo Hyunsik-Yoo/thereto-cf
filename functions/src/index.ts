@@ -2,7 +2,7 @@ import * as functions from 'firebase-functions';
 
 import admin = require('firebase-admin');
 
-import { User, ResponseContainer } from './modal';
+import * as Modal from './modal';
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
@@ -23,11 +23,11 @@ exports.addMessage = functions.https.onRequest(async (req, res) => {
 
 exports.signUp = functions.https.onRequest(async (request, response) => {
     if (request.method === "POST") {
-        let user = new User(request.body);
+        let user = new Modal.User(request.body);
         console.log(user.toString())
         let userJson = JSON.parse(JSON.stringify(user));
-        let document = admin.firestore().doc(`user/${user.social}${user.id}`)
-        let responseContainer = new ResponseContainer<User>(user, "");
+        let document = admin.firestore().doc(`user/${user.id}`)
+        let responseContainer = new Modal.ResponseContainer<Modal.User>(user, "");
 
         if ((await document.get()).exists) {
             // 동일한 아이디가 이미 존재하면 에러 반환
