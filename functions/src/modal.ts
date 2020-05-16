@@ -62,13 +62,23 @@ export class Friend {
 
     constructor(json: any) {
         this.id = json.id;
-        this.nickname = json.nickanme;
+        this.nickname = json.nickname;
         this.social = json.social;
         this.profileURL = json.profileURL;
         this.requestState = json.requestState;
         this.createdAt = json.createdAt;
         this.receivedCount = json.receivedCount;
         this.sentCount = json.sentCount;
+    }
+
+    public toString(): String {
+        return `id: ${this.id}\n
+        nickanme: ${this.nickname}\n
+        social: ${this.social}\n
+        profile_url: ${this.profileURL}\n
+        received_count: ${this.receivedCount}\n
+        sent_count: ${this.sentCount}\n
+        requestState: ${this.requestState}`;
     }
 }
 
