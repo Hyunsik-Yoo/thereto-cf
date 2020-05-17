@@ -6,6 +6,7 @@ export class User {
     receivedCount: Number;
     sentCount: Number;
     newFriendRequest: Boolean;
+    createdAt: String;
 
     constructor(json: any) {
         this.id = json.id;
@@ -15,6 +16,7 @@ export class User {
         this.receivedCount = json.receivedCount;
         this.sentCount = json.sentCount;
         this.newFriendRequest = json.newFriendRequest;
+        this.createdAt = json.createdAt;
     }
 
     /**
@@ -27,7 +29,8 @@ export class User {
         profile_url: ${this.profileURL}\n
         received_count: ${this.receivedCount}\n
         sent_count: ${this.sentCount}\n
-        newFriendRequest: ${this.newFriendRequest}`;
+        newFriendRequest: ${this.newFriendRequest}\n
+        createdAt: ${this.createdAt}`;
     }
 }
 
