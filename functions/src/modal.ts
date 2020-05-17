@@ -5,6 +5,7 @@ export class User {
     profileURL: String;
     receivedCount: Number;
     sentCount: Number;
+    newFriendRequest: Boolean;
 
     constructor(json: any) {
         this.id = json.id;
@@ -13,6 +14,7 @@ export class User {
         this.profileURL = json.profileURL;
         this.receivedCount = json.receivedCount;
         this.sentCount = json.sentCount;
+        this.newFriendRequest = json.newFriendRequest;
     }
 
     /**
@@ -24,7 +26,8 @@ export class User {
         social: ${this.social}\n
         profile_url: ${this.profileURL}\n
         received_count: ${this.receivedCount}\n
-        sent_count: ${this.sentCount}`;
+        sent_count: ${this.sentCount}\n
+        newFriendRequest: ${this.newFriendRequest}`;
     }
 }
 
