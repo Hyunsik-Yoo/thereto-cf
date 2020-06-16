@@ -42,11 +42,24 @@ exports.signUp = functions.https.onRequest(async (request, response) => {
     }
 });
 
-exports.makeUppercase = functions.database.ref('/messages/{pushId}/original').onCreate((snapshot, context) => {
-    const original = snapshot.val();
+exports.sendLetterNotification = functions.firestore.document("letter/{letterId}").onWrite(async (change, context) => {
+    const letterId = context.params.letterId;
+    console.log('Letter ID: ', letterId);
 
-    console.log("Uppercasing", context.params.pushId, original);
-    const uppercase = original.toUpperCase();
+    const payload = {
+        notification: {
+          title: '새 편지가 도착했어요!',
+          body: `편지를 확인해주세요.`
+        }
+    };
+    let tokens = "fCXu5DoilEtRhl2yupGthI:APA91bF2gICIsGI5ijecqNTV-KSooCTvGZnwPi-woxVsZGsk5nqpjhIr_d9QTgOEAS7NErfzJSawk5El7DVUZ-IwqBEe4mK7T2yt88bzUjX8kVXlfp2BD2xHylmcLrA3VL7hcUyKssKo";
 
-    return snapshot.ref.parent?.child('uppercase').set(uppercase);
+    const response = await admin.messaging().sendToDevice(tokens, payload);
+    response.results.forEach((result, index) => {
+        const error = result.error;
+        if (error) {
+          console.error('Failure sending notification to', tokens[index], error);
+          // Cleanup the tokens who are not registered anymore.
+        }
+      });
 });
