@@ -42,24 +42,38 @@ exports.signUp = functions.https.onRequest(async (request, response) => {
     }
 });
 
-exports.sendLetterNotification = functions.firestore.document("letter/{letterId}").onWrite(async (change, context) => {
-    const letterId = context.params.letterId;
-    console.log('Letter ID: ', letterId);
+exports.sendLetterNotification = functions.firestore.document("letter/{letterId}").onCreate(async (snap, context) => {
+    const letter = snap.data();
 
-    const payload = {
-        notification: {
-          title: '새 편지가 도착했어요!',
-          body: `편지를 확인해주세요.`
-        }
-    };
-    let tokens = "fCXu5DoilEtRhl2yupGthI:APA91bF2gICIsGI5ijecqNTV-KSooCTvGZnwPi-woxVsZGsk5nqpjhIr_d9QTgOEAS7NErfzJSawk5El7DVUZ-IwqBEe4mK7T2yt88bzUjX8kVXlfp2BD2xHylmcLrA3VL7hcUyKssKo";
+    if (letter) {
+        const toUserId: string = letter.to.id;
+        const fromName: string = letter.from.nickname;
+        const userDocument = admin.firestore().collection("user").doc(toUserId);
 
-    const response = await admin.messaging().sendToDevice(tokens, payload);
-    response.results.forEach((result, index) => {
-        const error = result.error;
-        if (error) {
-          console.error('Failure sending notification to', tokens[index], error);
-          // Cleanup the tokens who are not registered anymore.
-        }
-      });
+        await userDocument.get().then(async doc => {
+            const data = doc.data()
+            if (data) {
+                const fcmToken = data.fcmToken;
+                if (fcmToken) { // FCM토큰이 존재할 경우에만 푸시 발송
+                    const payload = {
+                        notification: {
+                          title: `"${fromName}"님으로부터 편지가 도착했습니다.`,
+                          body: `수신함을 확인해주세요.`
+                        }
+                    };
+                    console.log("Fcm token: ",fcmToken);
+
+                    const response = await admin.messaging().sendToDevice(fcmToken, payload);
+                    response.results.forEach((result, index) => {
+                        const error = result.error;
+                        if (error) {
+                          console.error('Failure sending notification to', error);
+                        }
+                      });
+                }
+            }
+            console.log("To user id: ",toUserId);
+            console.log("From name: ", fromName);
+        });
+    }
 });
